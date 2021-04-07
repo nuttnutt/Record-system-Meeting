@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 3 | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="./plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="./dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/style.css">
+    <!-- Login css -->
+    <link rel="stylesheet" href="./dist/css/login.css">
+
+</head>
+
+<body>
+    <!-- class="hold-transition login-page" style="background-color:#ff00ea" -->
+    <div class="d-flex justify-content-center h-100">
+        <div class="login-box">
+            <div class="login-logo content-center">
+                <img src="dist/img/Logo_of_Vachira_Phuket_Hospital1.png" />
+                <div class="form-group">
+                    <h5 class="font-effect-outline ">โรงพยาบาลวชิระภูเก็ต </h1>
+                        <h5 class="font-effect-outline ">VACHIRAPHUKET HOSPITAL</h5>
+                </div>
+            </div>
+            <!-- /.login-logo -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="font-effect-emboss ">Sign In</h3>
+                </div>
+                <div class="card-body">
+                    <form amethod="post" id="chklogin" enctype="multipart/form-data">
+                        <div class="input-group form-group">
+                            <input type="text" id="username" name="username" class="form-control" placeholder="ชื่อผู้เข้าใช้งานระบบ" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group form-group">
+                            <input type="password" class="form-control pass-swap" id="password" name="password" placeholder="รหัสผ่าน" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="fa fa-eye"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">เข้าสู่ระบบ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- <div class="card-body login-card-body">
+        </div> -->
+
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+</body>
+
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="./plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="./dist/js/adminlte.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#chklogin').on("submit", function(event) {
+            event.preventDefault();
+            if ($('#username').val() == "") {
+                alert("Username");
+                return false;
+            }
+            if ($('#password').val() == "") {
+                alert("Password");
+                return false;
+            }
+            var user = $('#username').val();
+            var pass = $('#password').val();
+            $.ajax({
+                url: "./db/chklogin.php",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    user: user,
+                    pass: pass
+                },
+                success: function(data) {
+                    if (data['success']) {
+                        $('#chklogin')[0].reset();
+                        window.location = "index.php";
+                    } else {
+                        $('#modal-danger').modal('show');
+                        alert(data['title']);
+                    }
+                    console.log(data['success']);
+                }
+            });
+        });
+        $(document.body).on("click", "[class*='fa-eye']", function() {
+            $(this).toggleClass("fa-eye-slash fa-eye");
+            let ele = $(this).closest(".input-group-append").siblings(".pass-swap");
+            let swap_attr = (ele.attr("type") == "password") ? "text" : "password";
+            ele.attr("type", swap_attr);
+        });
+    });
+</script>
+
+
+</html>
